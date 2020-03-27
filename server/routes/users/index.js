@@ -1,24 +1,33 @@
 const express = require('express');
 const passport = require('passport');
 const UserModel = require('../../models/UserModel');
+const middlewares = require('../middlewares');
 
 const router = express.Router();
 
-module.exports = () => {
-  router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/users/login?error=true',
-  }));
-  router.get('/login', ((req, res) => res.render('users/login', { error: req.query.error })));
+const redirectIfLoggedIn = (req, res, next) => {
+  if (req.user) return res.redirect('/user/account');
+  return next();
+};
 
-  router.get('/logout', ((req, res) => {
+module.exports = () => {
+  router.post(
+    '/login',
+    passport.authenticate('local', {
+      successRedirect: '/',
+      failureRedirect: '/users/login?error=true',
+    }),
+  );
+  router.get('/login', redirectIfLoggedIn, (req, res) => res.render('users/login', { error: req.query.error }));
+
+  router.get('/logout', (req, res) => {
     req.logout();
     return res.redirect('/');
-  }))
+  });
 
-  router.get('/registration', (req, res) => res.render('users/registration', { success: req.query.success }));
+  router.get('/registration', redirectIfLoggedIn, (req, res) => res.render('users/registration', { success: req.query.success }));
 
-  router.post('/registration', async (req, res, next) => {
+  router.post('/registration', middlewares.upload.single('avatar'),  async (req, res, next) => {
     try {
       const { username, email, password } = req.body;
       const user = new UserModel({
@@ -35,7 +44,14 @@ module.exports = () => {
     }
   });
 
-  router.get('/account', (req, res) => res.render('users/account', { user: req.user }));
+  router.get(
+    '/account',
+    (req, res, next) => {
+      if (req.user) return next();
+      return res.status(401).end();
+    },
+    (req, res) => res.render('users/account', { user: req.user }),
+  );
 
   return router;
 };

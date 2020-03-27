@@ -1,6 +1,6 @@
 extends ../layout/index
 
-block content      
+block content
   .container#registration
     .row
       .col-sm-8
@@ -8,15 +8,15 @@ block content
         if success
          .alert.alert-success
            | Thank you for your registration!
-        else   
+        else
           .panel.panel-default
             .panel-body
-              form(method="POST", action="/users/registration")
+              form(method="POST", action="/users/registration", enctype="multipart/form-data")
                 .form-group
                   label(for='inputName') Name
                   input#inputName.form-control(type='text', name='username', aria-describedby='nameHelp', placeholder='Enter your name', required, minlength=3)
                   small#nameHelp.form-text.text-muted This is how others will see you on the page. Please enter at least 3 characters.
-  
+
                 .form-group
                   label(for='inputEmail') Email address
                   input#inputEmail.form-control(type='email', name='email', aria-describedby='emailHelp', placeholder='Enter email', required)
@@ -29,7 +29,7 @@ block content
                   label(for='avatar') Your avatar picture
                   input#inputFile.form-control(type='file', name='avatar', accept=".png, .jpg, .jpeg", aria-describedby='fileHelp')
                   small#fileHelp.form-text.text-muted PNG or JPG (Max 2MB)
-  
+
                 button.btn.btn-primary(type='submit') Submit
 
       if artwork
