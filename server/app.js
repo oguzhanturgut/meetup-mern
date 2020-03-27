@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const createError = require('http-errors');
 const bodyParser = require('body-parser');
+const auth = require('./lib/auth');
 const routes = require('./routes');
 const SpeakerService = require('./services/SpeakerService');
 const FeedbackService = require('./services/FeedbackService');
@@ -33,6 +34,10 @@ module.exports = (config) => {
       store: new MongoStore({ mongooseConnection: mongoose.connection }),
     }),
   );
+
+  app.use(auth.initialize);
+  app.use(auth.session);
+  app.use(auth.setUser);
 
   app.use(async (req, res, next) => {
     try {
