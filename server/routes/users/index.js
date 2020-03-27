@@ -1,9 +1,21 @@
 const express = require('express');
+const passport = require('passport');
 const UserModel = require('../../models/UserModel');
 
 const router = express.Router();
 
 module.exports = () => {
+  router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/users/login?error=true',
+  }));
+  router.get('/login', ((req, res) => res.render('users/login', { error: req.query.error })));
+
+  router.get('/logout', ((req, res) => {
+    req.logout();
+    return res.redirect('/');
+  }))
+
   router.get('/registration', (req, res) => res.render('users/registration', { success: req.query.success }));
 
   router.post('/registration', async (req, res, next) => {
