@@ -61,6 +61,7 @@ typings/
 .next
 
 ~$*.pptx
+*.png
 .idea
 /.eslintrc.js
 /package-lock.json
