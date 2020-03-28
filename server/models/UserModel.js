@@ -51,7 +51,7 @@ UserSchema.pre('save', async function preSave(next) {
     user.password = hash;
     return next();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 });
 

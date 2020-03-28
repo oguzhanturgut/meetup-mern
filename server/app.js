@@ -10,13 +10,13 @@ const auth = require('./lib/auth');
 const routes = require('./routes');
 const SpeakerService = require('./services/SpeakerService');
 const FeedbackService = require('./services/FeedbackService');
-const AvatarSErvice = require('./services/AvatarService');
+const AvatarService = require('./services/AvatarService');
 
 module.exports = (config) => {
   const app = express();
   const speakers = new SpeakerService(config.data.speakers);
   const feedback = new FeedbackService(config.data.feedback);
-  const avatars = new AvatarSErvice(config.data.avatars);
+  const avatars = new AvatarService(config.data.avatars);
 
   app.set('view engine', 'pug');
   app.set('views', path.join(__dirname, './views'));
